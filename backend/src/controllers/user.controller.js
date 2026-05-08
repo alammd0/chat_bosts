@@ -132,6 +132,12 @@ export const loginUser = async (req, res) => {
 
         return res.status(200).json({
             message : "User logged in successfully",
+            user : {
+                id : user._id,
+                name : user.name,
+                email : user.email,
+                username : user.username
+            },
             token : token
         })
     }

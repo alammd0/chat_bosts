@@ -11,7 +11,6 @@ import { authMiddleware } from '../middlewares/auth.middleware.js';
 
 const userRoutes = express.Router();
 
-
 /**
  * @description: This route is used to register a new user
  * @route : /api/user/register

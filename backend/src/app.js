@@ -1,5 +1,6 @@
 import express from 'express';
 import userRoutes from './routes/user.route.js';
+import chatRoutes from './routes/chat.route.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
@@ -15,6 +16,7 @@ app.use(cors({
 
 
 app.use('/api/user', userRoutes);
+app.use('/api/chat', chatRoutes);
 
 
 export default app;

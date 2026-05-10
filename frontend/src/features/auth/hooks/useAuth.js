@@ -31,7 +31,7 @@ export const useAuth = () => {
             setIsLoading(true);
             const response = await loginUser({email, password}); 
             setUser(response.user);
-            navigate("/");
+            navigate("/chat");
             setIsLoading(false);
         }
         catch(error){

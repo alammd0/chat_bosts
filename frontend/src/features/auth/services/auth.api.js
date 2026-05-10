@@ -1,22 +1,14 @@
 import axios from "axios"
+import apiInstance from "../../../shared/lib/axio";
 
 /**
  * @description:  Here write the function to authenticate the user
  */
 
-/**
- * @description: here write axios instance to make the request
- */
-
-const apiInstance = axios.create({
-    baseURL: "http://localhost:3000/api/user",
-    withCredentials : true 
-})
-
 // 1. Register Function
 export const registerUser = async ({ name, username, email, password }) => {
     try {
-        const response = await apiInstance.post("/register",{
+        const response = await apiInstance.post("/user/register",{
             name, 
             username,
             email,
@@ -36,7 +28,7 @@ export const registerUser = async ({ name, username, email, password }) => {
 
 export const loginUser = async ({ email, password }) => {
     try {
-        const response = await apiInstance.post("/login",{
+        const response = await apiInstance.post("/user/login",{
             email,
             password,
         });
@@ -51,7 +43,7 @@ export const loginUser = async ({ email, password }) => {
 // 3. logout Function
 export const logoutUser = async () => {
     try {
-        const response = await apiInstance.get("/logout");
+        const response = await apiInstance.get("/user/logout");
 
         return response.data;
     }
@@ -63,7 +55,7 @@ export const logoutUser = async () => {
 // 4. getMe Function 
 export const getMe = async () => {
     try {
-        const response = await apiInstance.get("/me");
+        const response = await apiInstance.get("/user/me");
 
         return response.data;
     }

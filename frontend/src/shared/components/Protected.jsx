@@ -1,5 +1,5 @@
 import { Navigate } from "react-router";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../features/auth/hooks/useAuth";
 
 export default function ProtectedRoute({ children }) {
 
@@ -9,7 +9,7 @@ export default function ProtectedRoute({ children }) {
 
     if (isLoading) {
         return (
-            <main className="min-h-screen bg-sky-900/80">
+            <main className="min-h-screen bg-sky-900/80 flex items-center justify-center">
                 <div className="three-body">
                     <div className="three-body__dot"></div>
                     <div className="three-body__dot"></div> 

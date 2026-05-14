@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { AIContext } from "../ai.context";
 
-import { sendMessage, getAllChats, getChat } from "../services/ai.api";
+import { createChat, getAllChats, getChat, sendMessage } from "../services/ai.api";
 
 import { useNavigate } from "react-router";
 
@@ -9,36 +9,25 @@ export const useChat = () => {
 
     const context = useContext(AIContext);
 
-    const { chats, setChats, isLoading, setIsLoading, currentChat, setCurrentChat, createNewChat } = context;
+    const { chats, setChats, isLoading, setIsLoading, currentChat, setCurrentChat, createNewChat} = context;
 
     const navigate = useNavigate();
 
     // ================= SEND MESSAGE =================
 
     const handleSendMessage = async ({ title, message }) => {
+
         try {
 
             setIsLoading(true);
 
-            const response = await sendMessage({
-                title,
-                message
-            });
+            const response = await createChat({ title, message });
 
-            // console.log(response);
+            const updatedChat = response?.chat;
 
-            // Add new chat to sidebar
-            setChats((prev) => [response.chat, ...prev]);
+            setChats((prev) => [updatedChat, ...prev]);
 
-            // Open current chat
-            setCurrentChat((prev) => ({
-                ...prev,
-                ...response.chat,
-                messages: [
-                    ...(prev?.messages || []),
-                    ...response.chat.messages
-                ]
-            }));
+            setCurrentChat(updatedChat);
 
             navigate(`/chat`);
 
@@ -99,6 +88,51 @@ export const useChat = () => {
         }
     };
 
+    // ================= SEND MESSAGE - FOR UPDATE CHAT =================
+
+    const handleAddedChat = async ({ id, message }) => {
+        try {
+
+            setIsLoading(true);
+
+            const response = await sendMessage({ id, message });
+
+            const updatedChat = response?.chat;
+
+            console.log(updatedChat);
+
+            // Update Sidebar Chats
+            setChats((prev) => {
+               
+                // check if the chat already Exits 
+                const chatExits = prev.find(
+                    chat => chat.id === updatedChat.id
+                );
+
+
+                // if the chat already Exits, update it
+                if (chatExits) {
+                    return prev.map((chat) => 
+                        chat.id === updatedChat.id ? updatedChat : chat
+                    )
+                }
+
+                // otherwise, add it to the chats array
+                return [...prev, updatedChat];
+            });
+
+            setCurrentChat(updatedChat);
+        }
+        catch (error) {
+
+            console.log(error);
+
+        } finally {
+
+            setIsLoading(false);
+        }
+    }
+
     return {
         chats,
         currentChat,
@@ -106,6 +140,7 @@ export const useChat = () => {
         handleSendMessage,
         handleGetAllChats,
         createNewChat,
-        handleGetChat
+        handleGetChat,
+        handleAddedChat
     };
 };

@@ -1,15 +1,19 @@
 import { LogOut, MessageSquarePlus } from "lucide-react"
 import { useChat } from "../hooks/useChat"
+import { useEffect } from "react";
+import { useAuth } from "../../auth/hooks/useAuth";
 
 
 export const Sidebar = () => {
 
-    const { createNewChat, isLoading, currentChat } = useChat();
+    const { createNewChat, isLoading, currentChat, handleGetAllChats, handleGetChat, chats } = useChat();
 
-    // get all chats
+    const { handleLogout } = useAuth();
 
+    useEffect( () => {
+        handleGetAllChats();
+    }, []);
     
-
     return (
         <aside className="fixed left-0 top-0 h-screen w-[280px] border-r border-white/10 bg-white/5 backdrop-blur-xl p-5 flex flex-col justify-between">
 
@@ -24,32 +28,44 @@ export const Sidebar = () => {
                     New Chat
                 </button>
 
-                {/* here Write Chat History Jo Backend Fetch kre enge */}
-                <div className="mt-8 space-y-3">
+                <div className="mt-8 space-y-3 overflow-y-auto max-h-[500px] pr-1">
+
                     {
-                        currentChat
+                        chats && chats.length > 0
                         ? (
-                            <div className="flex items-center gap-2 text-gray-400">
-                                <span className="text-sm">
-                                    {currentChat.title}
-                                </span>
-                                <span className="text-sm">
-                                    {currentChat.messages.length} messages
-                                </span>
-                            </div>
+                            chats.map((chat, index) => (
+                                <div
+                                    key={chat?._id || index}
+                                    onClick={() => handleGetChat(chat?._id)}
+                                    className={`p-3 rounded-xl cursor-pointer transition-all duration-300 border
+                                        
+                                        ${currentChat?._id === chat?._id
+                                            ? "bg-sky-500/20 border-sky-500/40"
+                                            : "bg-white/5 border-white/10 hover:bg-white/10"
+                                        }
+                                    `}
+                                >
+                                    <h3 className="text-sm font-medium truncate">
+                                        {chat.title || "New Chat"}
+                                    </h3>
+
+                                    <p className="text-xs text-gray-400 mt-1">
+                                        {chat.messages?.length || 0} messages
+                                    </p>
+                                </div>
+                            ))
                         )
                         : (
-                            <div className="flex items-center gap-2 text-gray-400">
-                                <span className="text-sm">
-                                    No chats yet
-                                </span>
+                            <div className="text-sm text-gray-400">
+                                No chats yet
                             </div>
                         )
                     }
+
                 </div>
             </div>
 
-            <button className="flex items-center justify-center gap-2 border border-red-500/30 text-red-400 hover:bg-red-500/10 py-3 rounded-xl transition-all duration-300 cursor-pointer">
+            <button onClick={handleLogout} className="flex items-center justify-center gap-2 border border-red-500/30 text-red-400 hover:bg-red-500/10 py-3 rounded-xl transition-all duration-300 cursor-pointer">
                 <LogOut size={18} />
                 Logout
             </button>

@@ -6,20 +6,26 @@ export const ChatInput = () => {
 
     const [message, setMessage] = useState("");
 
-    const { currentChat, handleSendMessage, isLoading } = useChat();
+    const { currentChat, handleSendMessage, isLoading, handleAddedChat } = useChat();
 
-    // console.log(currentChat);
+    const chatId = currentChat?.id;
 
     const handleSubmit = async (e) => {
-
         e.preventDefault();
 
         if (!message.trim()) return;
 
-        await handleSendMessage({
-            title: currentChat?.title || "New Chat",
-            message
-        });
+        if(!chatId){
+            await handleSendMessage({
+                title: currentChat?.title || "New Chat",
+                message
+            });
+        } else {
+            await handleAddedChat({
+                id : chatId,
+                message
+            })
+        }
 
         setMessage("");
     };

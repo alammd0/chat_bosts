@@ -4,6 +4,7 @@ import { Login } from "./features/auth/pages/Login";
 import ProtectedRoute from "./shared/components/Protected";
 import { Home } from "./features/auth/pages/Home";
 import { Chat } from "./features/ai/page/Chat";
+import { SingleChat } from "./features/ai/page/SingleChat";
 
 const router = createBrowserRouter([
     {
@@ -24,6 +25,13 @@ const router = createBrowserRouter([
         path : "/chat",
         element : <ProtectedRoute>
             <Chat />
+        </ProtectedRoute>
+    },
+
+    {
+        path : "/chat/:id",
+        element : <ProtectedRoute>
+            <SingleChat />
         </ProtectedRoute>
     }
 ])

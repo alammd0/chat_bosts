@@ -67,6 +67,75 @@ export const createChat = async (req, res) => {
 }
 
 /**
+ * @description : This Controller is used to Send a Message to the Chat
+ * @route : /chat
+ * @method : POST
+ * @access : Private
+ */
+
+export const sendMessage = async (req, res) => {
+    try {
+        const { id: chatId } = req.params;
+        const { message } = req.body;
+
+        const chat = await Chat.findById(chatId);
+
+        // console.log(chat);
+
+        if(!chat){
+            return res.status(400).json({
+                message : "Chat not found",
+                error : null
+            })
+        }
+
+        const userId = req.user.id;
+
+        const findUser = await User.findById(userId);
+
+        if(!findUser){
+            return res.status(400).json({
+                message : "User not found",
+                error : null
+            })
+        }
+
+        // Add user message to the chat
+        chat.messages.push({
+            role : "user",
+            content : message
+        });
+
+        const aiResponse = await getGroqChatCompletion(message);
+
+        // Add AI message to the chat
+        chat.messages.push({
+            role : "assistant",
+            content : aiResponse
+        });
+
+        await chat.save();
+
+        return res.status(200).json({
+            message : "Message sent successfully",
+            chat : {
+                id : chat._id,
+                title : chat.title,
+                userId : chat.userId,
+                messages : chat.messages
+            }
+        });
+
+    }
+    catch (error) {
+        return res.status(500).json({
+            message : "Server error",
+            error : error
+        })
+    }
+}
+
+/**
  * @description : This Controller is used to Get All Chats
  * @route : /chat
  * @method : GET

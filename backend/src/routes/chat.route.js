@@ -1,6 +1,6 @@
 
 import express from "express";
-import { createChat, getAllChats, getChat} from "../controllers/chat.controller.js"
+import { createChat, getAllChats, getChat, sendMessage} from "../controllers/chat.controller.js"
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const chatRoutes = express.Router();
@@ -21,7 +21,7 @@ chatRoutes.get("/", authMiddleware, getAllChats)
  * @method : GET
  * @access : Private
  */
-chatRoutes.get("/:id", authMiddleware, getAllChats)
+chatRoutes.get("/:id", authMiddleware, getChat)
 
 /**
  * @description: This Route is used to create a new chat
@@ -30,5 +30,13 @@ chatRoutes.get("/:id", authMiddleware, getAllChats)
  * @access : Private
  */
 chatRoutes.post("/", authMiddleware, createChat)
+
+/** 
+ * @description: This Route to send a message to the chat
+ * @route : /api/chat
+ * @method : POST
+ */
+
+chatRoutes.post("/:id", authMiddleware, sendMessage)
 
 export default chatRoutes;

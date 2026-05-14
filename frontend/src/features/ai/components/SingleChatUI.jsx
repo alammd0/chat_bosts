@@ -5,9 +5,8 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import MarkdownRenderer from "../../../shared/components/MarkdownRenderer";
 
-export const ChatUI = () => {
-
-    const { currentChat } = useChat();
+export const SingleChatUI = ({ id }) => {
+    const { currentChat, handleGetChat, isLoading, chats, handleAddedChat} = useChat()
 
     const bottomRef = useRef(null);
     
@@ -16,6 +15,13 @@ export const ChatUI = () => {
             behavior: "smooth"
         });
     }, [currentChat]);
+
+    useEffect( () => {
+        handleGetChat(id);
+    }, [id])
+
+
+    // ================= SEND MESSAGE - FOR UPDATE CHAT =================
 
     if (!currentChat) {
         return (

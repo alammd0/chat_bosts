@@ -6,7 +6,7 @@ export const ChatInput = () => {
 
     const [message, setMessage] = useState("");
 
-    const { currentChat, handleSendMessage, isLoading, handleAddedChat } = useChat();
+    const { currentChat, isLoading, handleCreateNewChat, handleUpdateMessage} = useChat();
 
     const chatId = currentChat?.id;
 
@@ -16,12 +16,12 @@ export const ChatInput = () => {
         if (!message.trim()) return;
 
         if(!chatId){
-            await handleSendMessage({
+            await handleCreateNewChat({
                 title: currentChat?.title || "New Chat",
                 message
             });
         } else {
-            await handleAddedChat({
+            await handleUpdateMessage({
                 id : chatId,
                 message
             })

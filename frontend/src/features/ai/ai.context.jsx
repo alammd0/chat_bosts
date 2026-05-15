@@ -10,8 +10,7 @@ export const AIProvider = ({ children }) => {
 
     // Create New Chat
     const createNewChat = () => {
-
-    setCurrentChat({
+        setCurrentChat({
             title: "New Chat",
             messages: []
         });

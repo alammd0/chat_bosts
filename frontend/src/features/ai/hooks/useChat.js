@@ -15,7 +15,7 @@ export const useChat = () => {
 
     // ================= SEND MESSAGE =================
 
-    const handleSendMessage = async ({ title, message }) => {
+    const handleCreateNewChat = async ({ title, message }) => {
 
         try {
 
@@ -40,6 +40,7 @@ export const useChat = () => {
             setIsLoading(false);
         }
     };
+
 
     // ================= GET ALL CHATS =================
 
@@ -90,7 +91,7 @@ export const useChat = () => {
 
     // ================= SEND MESSAGE - FOR UPDATE CHAT =================
 
-    const handleAddedChat = async ({ id, message }) => {
+    const handleUpdateMessage = async ({ id, message }) => {
         try {
 
             setIsLoading(true);
@@ -101,24 +102,25 @@ export const useChat = () => {
 
             console.log(updatedChat);
 
-            // Update Sidebar Chats
             setChats((prev) => {
-               
-                // check if the chat already Exits 
-                const chatExits = prev.find(
-                    chat => chat.id === updatedChat.id
+
+                const chatExists = prev.find(
+                    (chat) => chat._id === updatedChat._id
                 );
 
+                if(chatExists){
+                    return prev.map((chat) =>
 
-                // if the chat already Exits, update it
-                if (chatExits) {
-                    return prev.map((chat) => 
-                        chat.id === updatedChat.id ? updatedChat : chat
-                    )
+                        chat._id === updatedChat._id
+                            ? updatedChat
+                            : chat
+
+                    );
+
                 }
 
-                // otherwise, add it to the chats array
-                return [...prev, updatedChat];
+                return [updatedChat, ...prev];
+
             });
 
             setCurrentChat(updatedChat);
@@ -137,10 +139,10 @@ export const useChat = () => {
         chats,
         currentChat,
         isLoading,
-        handleSendMessage,
+        handleCreateNewChat,
         handleGetAllChats,
         createNewChat,
         handleGetChat,
-        handleAddedChat
+        handleUpdateMessage
     };
 };

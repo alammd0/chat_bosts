@@ -48,10 +48,6 @@ export const Sidebar = () => {
                                     <h3 className="text-sm font-medium truncate">
                                         {chat.title || "New Chat"}
                                     </h3>
-
-                                    <p className="text-xs text-gray-400 mt-1">
-                                        {chat.messages?.length || 0} messages
-                                    </p>
                                 </div>
                             ))
                         )

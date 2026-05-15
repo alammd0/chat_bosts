@@ -22,6 +22,7 @@ export const createChat = async (req, res) => {
             })
         }
 
+        // Find the user
         const findUser = await User.findById(userId);
 
         if(!findUser){
@@ -31,7 +32,14 @@ export const createChat = async (req, res) => {
             })
         }
 
-        const aiResponse = await getGroqChatCompletion(message);
+        const formattedMessages = [
+            {
+                role : "user",
+                content : message
+            }
+        ]
+
+        const aiResponse = await getGroqChatCompletion(formattedMessages);
 
         const chat = await Chat.create({
             title : title,
@@ -106,7 +114,12 @@ export const sendMessage = async (req, res) => {
             content : message
         });
 
-        const aiResponse = await getGroqChatCompletion(message);
+        const formattedMessages = chat.messages.slice(-20).map(msg => ({
+            role : msg.role,
+            content : msg.content
+        }));
+
+        const aiResponse = await getGroqChatCompletion(formattedMessages);
 
         // Add AI message to the chat
         chat.messages.push({
